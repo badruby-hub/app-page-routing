@@ -1,0 +1,34 @@
+{
+    "todo": [
+      {
+        "id": "2",
+        "text": "green",
+        "checked": false
+      },
+      {
+        "id": "3",
+        "text": "blue",
+        "checked": false
+      },
+      {
+        "id": "4",
+        "text": "red",
+        "checked": false
+      },
+      {
+        "id": "5",
+        "text": "pink ",
+        "checked": false
+      },
+      {
+        "id": "6",
+        "text": "orange",
+        "checked": false
+      },
+      {
+        "id": "7",
+        "text": "gray",
+        "checked": false
+      }
+    ]
+  }
