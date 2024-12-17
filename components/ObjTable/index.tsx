@@ -3,7 +3,7 @@ import classes from "./ObjTable.module.css";
 
 interface Column {
     title: string;
-    content: (obj: any) => JSX.Element; // Уточните тип, если возможно
+    content: (obj: any) => JSX.Element;
 }
 
 interface Config {
