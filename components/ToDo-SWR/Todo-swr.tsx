@@ -2,20 +2,21 @@ import { ObjTable } from "@/components/ObjTable";
 import { config } from "../configs/ArrayTitle";
 import useSWR from 'swr';
 import toast from 'react-hot-toast';
-import { Error } from '../Error/index';
-import { useState } from "react";
+import { Err } from '../Error/index';
+import { MouseEventHandler, useState } from "react";
 import classes from "@/components/ToDo-SWR/Todo-swr.module.css";
+import { ToDo } from "@prisma/client";
 
 const 
 API_URL = '/api/todo',
 DELETE = 'del',
 CHECK = 'toggle-checkbox',
 ADD ='add',
-fetcher = async () => {
+fetcher = async ():Promise<ToDo[]> => {
     console.log("fether");
-    const response = await fetch(API_URL);
-    if (!response.ok) throw new Error('fetch ' + response.status);
-    return await response.json();
+    const response : Response = await fetch(API_URL);
+    if (!response.ok) throw new Error('fetch ' + response.status) as Error;
+    return await response.json() as ToDo[];
     
 },
 
@@ -31,11 +32,22 @@ infofetcher = async()=>{
 },
 columns = config.columns;
 
+interface Column {
+    title: string;
+    content: (props: { text: string }) => string;
+    setVal: (text: string) => { text: string; };
+}
+
+interface AddFormProps {
+    columns: Column[];
+    values: string[];
+    setValues: React.Dispatch<React.SetStateAction<string[]>>;
+}
 
 
 
-function AddForm({columns,values,setValues}) {
-
+function AddForm({columns,values,setValues}:AddFormProps) {
+   
     return<>
     <h3 className={classes.zagolovok}>Добавьте дело</h3>
    
@@ -44,7 +56,10 @@ function AddForm({columns,values,setValues}) {
             {setVal
                 ? <input
                   value={values[i]}
-                  onInput={event =>setValues(prev=>prev.with(i,event.target.value))}/>
+                  onInput={event =>{
+                    const target = event.target as HTMLInputElement; 
+                    setVal(target.value);
+                    setValues(prev=>prev.with(i,target.value))}}/>
                 : ''}
                 </div>
          )}
@@ -61,20 +76,21 @@ export  function ToDoSwr(){
     const 
     { data, error, isLoading, isValidating, mutate } = useSWR(API_URL, infofetcher,{revalidateOnFocus:false}),
     [addValues,setAddValues]= useState(Array.from({length: config.columns.length},()=>'')),
-    onClick =async event =>{
-        const 
-           action = event.target.closest('[data-action]')?.dataset?.action,
-           id = +event.target.closest('[data-id]')?.dataset?.id;
+    onClick: MouseEventHandler =async event =>{
+        const
+           target = event.target as HTMLElement,
+           action = (target.closest('[data-action]') as HTMLElement)?.dataset?.action,
+           id = (target.closest('[data-id]') as HTMLElement)?.dataset?.id;
            console.log("onClick", {action,id});
            if(!action)return;
-           let optimisticData;
-           let newObj;
+           let optimisticData: ToDo[]|undefined;
+           let newObj: ToDo;
            const 
               getPromise=()=>{
                     switch (action) {
                         case DELETE:
                             if(!id)return;
-                            optimisticData = data.filter(el => String(el.id) !== id);
+                            optimisticData = data?.filter(el => String(el.id) !== id);
                             return fetch(API_URL + '/' + id, { method: 'DELETE' })
                               .then(res => {
                                 if (!res.ok) {
@@ -82,12 +98,17 @@ export  function ToDoSwr(){
                               }
                              });
                         case ADD:
-                            newObj = {};
+                            newObj = {
+                                id: 1,
+                                text:'',
+                                checked: false
+                            };
                             config.columns.map(({setVal},i)=>setVal && Object.assign(newObj,setVal(addValues[i])));
-                            const maxId = data.reduce((max, item) => Math.max(max, item.id), 0);
-                            newObj.id = (maxId + 1).toString();
-                            newObj.checked = false;
+                            if(data){
                             optimisticData = data.concat(newObj);
+                            }else{
+                                optimisticData = [newObj];
+                            }
                             return fetch(API_URL, {
                                  method: 'POST',
                                   headers:{'Content-Type': 'application/json'},
@@ -99,11 +120,24 @@ export  function ToDoSwr(){
                               setAddValues(Array.from({ length: config.columns.length }, () => ''));
                           });
                           case CHECK:
-                            return fetch(API_URL + '/' + id, {
-                                method: 'PATCH',
-                                headers:{'Content-Type': 'application/json'},
-                                body: JSON.stringify({checked: !data.find(el=> String(id) === String(el.id))?.checked})
-                             });
+                            if (data) {
+                                const currentItem = data.find(el => String(el.id) === String(id));
+                                if (currentItem) {
+                                    const newCheckedStatus = !currentItem.checked;
+                                    optimisticData = data.map(el => el.id === currentItem.id ? { ...el, checked: newCheckedStatus } : el);
+                                    return fetch(API_URL + '/' + id, {
+                                        method: 'PATCH',
+                                        headers:{'Content-Type': 'application/json'},
+                                        body: JSON.stringify({checked: !data.find(el=> String(id) === String(el.id))?.checked})
+                                     });
+                                } else {
+                                    console.error("Item not found");
+                                }
+                            } else {
+                                console.error("Data is undefined");
+                            }
+                            
+                        
                         }
                        
                     },
@@ -116,11 +150,15 @@ export  function ToDoSwr(){
             } else if (action === DELETE) {
                 successMessage = 'Дело удалено';
             } else if (action === CHECK) {
-                const сheckedStatus = data.find(el => String(el.id) === String(id))?.checked;
-                successMessage = сheckedStatus ? 'Статус: В процессе' : 'Статус: Выполнено';
-           
+                if (data) { 
+                    const checkedStatus = data.find(el => String(el.id) === String(id))?.checked;
+                    successMessage = checkedStatus ? 'Статус: В процессе' : 'Статус: Выполнено';
+                } else {
+                    console.error("Data is undefined");
+                    successMessage = 'Не удалось получить статус';
+                }
             }
-            toast.promise(promise,{
+            toast.promise(promise as Promise<void>,{
                 loading: "Загрузка: " + action,
                 success: successMessage,
                 error: (err) => `${err.toString()}`,
@@ -133,7 +171,7 @@ export  function ToDoSwr(){
       {isLoading && '⌛'}
       {isValidating && '👁'}
     </div>
-    {error && <Error error={error} />}
+    {error && <Err error={error} />}
          <div onClick={onClick}>
         {data && <ObjTable data={data} config={{columns}}>
             <AddForm columns={config.columns} values={addValues} setValues={setAddValues}/>

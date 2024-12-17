@@ -1,22 +1,42 @@
 import { useState, memo } from "react";
 import classes from "./ObjTable.module.css";
 
+interface Column {
+    title: string;
+    content: (obj: any) => JSX.Element; // Уточните тип, если возможно
+}
 
-export const  ObjTable = memo (function ObjTable({ data,config,children}){
+interface Config {
+    columns: Column[];
+}
+
+interface Item {
+    id: number;
+    text: string;
+    checked: boolean;
+}
+
+interface DescriptionProps {
+    data: Item[];
+    config: Config;
+    checked: boolean;
+}
+
+export const  ObjTable = memo (function ObjTable({ data,config,children}:any){
     console.debug('ToDoList render');
     return <div className={classes.table}> 
         {children}
         <div className={classes.container}>
-        <Description data={data}  config={config}/>
+        <Description data={data} checked={false}  config={config}/>
         </div>
     </div>
 });
 
 
-function Description({data,config,checked}) {
+function Description({data,config,checked}:DescriptionProps) {
     const [items, setItems] = useState(data);
 
-    const checkbox = (id) => {
+    const checkbox = (id:number) => {
         setItems(prevItems =>
             prevItems.map(item =>
                 item.id === id ? { ...item, checked: !item.checked } : item

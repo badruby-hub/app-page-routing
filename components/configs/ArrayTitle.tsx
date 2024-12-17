@@ -1,6 +1,6 @@
 export const 
 config = {
   columns: [
-   {title:'text', content: ({text})=> text, setVal: text=>({text})},
+   {title:'text', content: ({text}:any)=> text, setVal: (text:any)=>({text})},
   ]
 };
