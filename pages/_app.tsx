@@ -4,10 +4,11 @@ import { Header } from "@/components/pages/Header";
 import {Toaster} from "react-hot-toast";
 import { SessionProvider } from "next-auth/react";
 
+
 export default function App({ Component,pageProps:{session, ...pageProps} }: AppProps) {
   return<>
+    <SessionProvider session={session}>
   <Header/>
-  <SessionProvider session={session}>
   <main>
   <Component {...pageProps} />
   <Toaster  

@@ -1,0 +1,10 @@
+.sing{
+    display: flex;
+    align-items: center;
+    margin-right: 100px;
+    gap: 1em;
+    .avatar{
+      border-radius: 50%;
+      width: 50px;
+    }
+  }

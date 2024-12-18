@@ -1,12 +1,22 @@
+header.head{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: black;
+  .sing{
+    height: 30px;
+    width: 95px;
+    margin-right: 100px;
+  }
 .navigation{
+      width: 100%;
     .block{ 
          display: flex;
-         justify-content: space-around;
          list-style: none;
          font-size: x-large;
          margin: 0;
          padding-block: .4em;
-         background-color: black;
+         gap: 2em;
          .page{
           border: 3px solid gray;
           user-select: none;
@@ -19,6 +29,8 @@
         }
   
   }
+}
+
   .block a{
     padding: .2em;
     color: white;
