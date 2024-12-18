@@ -33,9 +33,5 @@ export const authOptions = {
   ],
 }
 
-export default function Auth(...params){
-    const[req,res]=params,
-    {query,body}= req;
-    console.log('<',req.method, '/api/auth/'+query.nextauth.join('/'),'\n',{query,body})
-    NextAuth(authOptions)(...params)
-}
+
+export default NextAuth(authOptions);
