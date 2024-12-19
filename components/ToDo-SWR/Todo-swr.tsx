@@ -7,6 +7,7 @@ import { useState } from "react";
 import { ToDo } from "@prisma/client";
 import { AddForm } from "../buttons/Button";
 import { Description } from "../buttons/Button";
+import classes from "./Todo-swr.module.css";
 const
     API_URL = '/api/todo',
     fetcher = async (): Promise<ToDo[]> => {
@@ -89,11 +90,12 @@ export function ToDoSwr() {
         }
     }
     return <>
-        <div style={{ top: '4rem', left: '35rem', position: 'absolute', fontSize: 'xxx-large' }}>
+        <div
+            className={classes.loading}>
             {isLoading && '⌛'}
             {isValidating && '👁'}
+            {error && `❌ ${error.toString()}`}
         </div>
-        {error && <Err error={error} />}
         <div>
             {data && <ObjTable data={data} config={{ columns: config.columns }}>
                 <AddForm columns={config.columns} values={addValues} setValues={setAddValues} addPost={AddPost} />
