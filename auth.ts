@@ -1,10 +1,19 @@
 import NextAuth from "next-auth"
-import GithubProvider from "next-auth/providers/github"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { prisma } from "@/prisma/prisma"
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { PrismaClient } from '@prisma/client';
 
-export const authOptions = {
-  // Configure one or more authentication providers
+import GitHub from "next-auth/providers/github"
+
+
+const prismaDB = new PrismaClient();
+
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  adapter: PrismaAdapter(prisma),
+  session: { strategy: "jwt" },
   providers: [
+    GitHub,
     CredentialsProvider({
       // The name to display on the sign in form (e.g. 'Sign in with...')
       name: 'Credentials',
@@ -16,21 +25,20 @@ export const authOptions = {
         username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
         password: { label: 'Password', type: 'password' }
       },
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       async authorize(credentials, req) {
-        console.log('________ credentials', credentials);
+        console.log('credentials', credentials);
         // Return null if user data could not be retrieved
 
-        if ('1' === credentials.username && '1' === credentials.password)
-          return { id: '11111', name: 'J Smith', email: 'jsmith@example.com' };
+        if ('1' === credentials?.username && '1' === credentials.password) {
+          const user = await prismaDB.user.findFirst({ where: { id: '1' } });
+          console.log('authorize user=', user);
+          return user;
+        }
         return null;
       }
-    }),
-    GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-    }),
+    })
+
   ],
-}
-
-
-export default NextAuth(authOptions);
+})
