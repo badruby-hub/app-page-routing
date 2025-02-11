@@ -14,7 +14,7 @@ function Account() {
         <h1> Hello </h1>
         {session?.user?.name} ({session?.user?.email})<br/>
         {session?.user?.image && <img src={session?.user?.image} style={{width:"50px", borderRadius:"50%"}}/>}
-         <button onClick={()=>signOut()}>Выйти</button>
+         <button onClick={()=>signOut()}>Выйти </button>
     </>  
     }
     return (
