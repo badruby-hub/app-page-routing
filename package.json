@@ -4,19 +4,17 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "json-serv": "npx json-server -p 3002 db.json",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.7.4",
     "@neondatabase/serverless": "^0.10.4",
     "@prisma/client": "^6.0.1",
-    "better-sqlite3": "^11.6.0",
     "generate": "^0.14.0",
-    "json-server": "^1.0.0-beta.3",
     "next": "15.0.3",
-    "next-auth": "^4.24.11",
+    "next-auth": "^5.0.0-beta.25",
     "prisma": "^6.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -34,5 +32,8 @@
   "main": "index.js",
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "prisma": {
+    "seed": "bun ./prisma/seed.ts"
+  }
 }
