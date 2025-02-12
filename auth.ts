@@ -5,7 +5,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaClient } from '@prisma/client';
 
 import GitHub from "next-auth/providers/github"
-
+import Google from "next-auth/providers/google"
 
 const prismaDB = new PrismaClient();
 
@@ -14,6 +14,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: { strategy: "jwt" },
   providers: [
     GitHub,
+    Google,
     CredentialsProvider({
       // The name to display on the sign in form (e.g. 'Sign in with...')
       name: 'Credentials',
