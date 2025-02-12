@@ -7,6 +7,7 @@ import { PrismaClient } from '@prisma/client';
 import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
 import Vk from "next-auth/providers/vk"
+import Yandex from "next-auth/providers/yandex";
 
 
 const prismaDB = new PrismaClient();
@@ -17,6 +18,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     GitHub,
     Google,
+    Yandex,
     Vk({
       clientId: process.env.AUTH_VK_ID, 
       clientSecret: process.env.AUTH_VK_SECRET,
