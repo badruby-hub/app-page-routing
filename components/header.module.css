@@ -3,36 +3,61 @@ header.head{
     justify-content: space-between;
     align-items: center;
     background-color: black;
-    .sing{
-      height: 30px;
-      width: 95px;
-      margin-right: 100px;
     }
-  .navigation{
-        width: 100%;
-      .block{ 
-           display: flex;
-           list-style: none;
-           font-size: x-large;
-           margin: 0;
-           padding-block: .4em;
-           gap: 2em;
-           .page{
-            border: 3px solid gray;
-            user-select: none;
-       
-          }
-          .page:active{
-            background-color:cadetblue;
-          }
-          
-          }
-    
-    }
-  }
   
+  .navigation{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;     
+      }
+  .page:active{
+    background-color:cadetblue;
+  }
+  .sing{
+    height: 30px;
+    width: 95px;
+    margin-right: 100px;
+  }
+  .block{ 
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    font-size: x-large;
+    margin: 0;
+    padding-block: .4em;
+  }
+    .page{
+      margin: .3em;
+      border: 3px solid gray;
+      user-select: none;
+ 
+    }
     .block a{
       padding: .2em;
       color: white;
       text-decoration: none;
+    }
+
+
+    .btn__auth{ 
+      font-size: x-large;
+      margin: 0;
+      padding-block: .1em;
+      flex-grow: 1;
+    }
+    .form__auth{
+      display: flex;
+    }
+    .block__btn__auth{
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      color: white;
+
+    }
+
+    .block__btn__text{
+      font-size: 1.2vw;
     }

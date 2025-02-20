@@ -1,15 +1,20 @@
 import Link from "next/link";
 import classes from "@/components/header.module.css";
+import { ReactNode } from "react";
 
 
 const 
    pages = [
     {href:'/', title: 'app-router'},
     {href:'/pages-router', title:'Pages-router'},
-    {href:'/custom-page', title:'Custom-router'},
+    {href:'/group-list', title:'Group list (app)'},
+    {href:'/pages-router/group-list', title:'Group list (pages)'},
+    {href:'/pages-router/student-list', title:'Student list (pages)'},
+    {href:'/account', title:'My Account(app)'},
+    {href:'/pages-router/account', title:'My Account(page)'},
    ];
 
-export function Navigation(){
+export function Navigation({children = null }:{children:ReactNode | undefined}){
     return <header className={classes.head}>
     <nav className={classes.navigation}>
         <ul className={classes.block}>
@@ -17,6 +22,7 @@ export function Navigation(){
             <Link href={href}>{title}</Link>
         </li>)}
         </ul>
+        {children}
     </nav>
         </header>
  }
