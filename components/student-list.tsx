@@ -1,19 +1,25 @@
-import type {Student} from "@prisma/client"
-export function StudentList({student}: {student: Student[]}) {
+import type {Student, Group} from "@prisma/client"
+
+type StudentWidthGroup = Student & {group: Group}
+
+
+export function StudentList({student}: {student: StudentWidthGroup[]}) {
     return <table>
         <thead>
             <tr>
+              <td>id</td>
               <td>name</td>
               <td>surname</td>
               <td>age</td>
             </tr>
         </thead>
         <tbody>
-            {student.map(({id,name,surname,age,groupId})=><tr key={id}>
+            {student.map(({id,name,surname,age,group})=><tr key={id}>
+                <td>{id}</td>
                 <td>{name}</td>
                 <td>{surname}</td>
                 <td>{age}</td>
-                <td>{groupId}</td>
+                <td>{group?.name}</td>
             </tr>)}
         </tbody>
     </table>

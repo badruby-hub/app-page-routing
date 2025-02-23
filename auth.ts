@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth  from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/prisma/prisma"
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -8,6 +8,7 @@ import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
 import Vk from "next-auth/providers/vk"
 import Yandex from "next-auth/providers/yandex";
+
 
 
 const prismaDB = new PrismaClient();
@@ -47,10 +48,44 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const user = await prismaDB.user.findFirst({ where: { id: '1' } });
           console.log('authorize user=', user);
           return user;
+            }
+            switch(credentials.username){
+              case 'admin':
+                if ( 'admin' === credentials.password) {
+                  const user = await prismaDB.user.findFirst({ where: { id: '2' } });
+                  return user;
+            }
+            case "student":
+              if ( 'student' === credentials.password) {
+                const user = await prismaDB.user.findFirst({ where: { id: '4' } });
+                return user;
+          }
+             case "teacher":
+              if ( 'teacher' === credentials.password) {
+                const user = await prismaDB.user.findFirst({ where: { id: '5' } });
+                return user;
+          }
+          
+          }
+          return null
         }
-        return null;
-      }
     })
-//
-  ],
+  
+],
+callbacks: {
+  jwt({ token, user }: { token: any; user: any }) {
+    if (user) {
+      token.id = user?.id as string;
+      token.role = user?.role as string;
+    }
+    return token
+  },
+  session({ session, token }: { token: any; session: any }) {
+    if (session.user) {
+      session.user.id = token?.id as string;
+      session.user.role = token?.role as string;
+    }
+    return session;
+  }
+}
 })

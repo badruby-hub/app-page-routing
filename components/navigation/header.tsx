@@ -12,6 +12,7 @@ const
     {href:'/pages-router/student-list', title:'Student list (pages)'},
     {href:'/account', title:'My Account(app)'},
     {href:'/pages-router/account', title:'My Account(page)'},
+    {href:'/grades', title:'Grade'},
    ];
 
 export function Navigation({children = null }:{children:ReactNode | undefined}){

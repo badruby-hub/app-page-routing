@@ -16,25 +16,28 @@ async function createGroups() {
 
 async function createStudent() {
     const data: Student[] = [
-       {id:1, name:'Сергей', surname:'Петров', age:28, groupId:1 },
-       {id:2, name:'Иван', surname:'Николаевич', age:25, groupId:1 },
-       {id:3, name:'Николай', surname:'Андреевич', age:20, groupId:3 },
-       {id:4, name:'Анастасия', surname:'Александровна', age:75, groupId:2 },
+       {id:1, name:'Сергей', surname:'Петров', age:28, groupId:1, userId:"3" },
+       {id:2, name:'Иван', surname:'Николаевич', age:25, groupId:1, userId:"6" },
+       {id:3, name:'Николай', surname:'Андреевич', age:20, groupId:3, userId:"7" },
+       {id:4, name:'Анастасия', surname:'Александровна', age:75, groupId:2, userId:"4" },
     ]
         return await prisma.student.createMany({data
     });
 }
 
 
+
 async function createUsers() {
     const data: User[] = [
-      { id: '1',
+      {
+         id: '1',
         name: 'John',
         email: 'test@test.com',
         createdAt: new Date,
         updatedAt: new Date,
         image: null,
-        emailVerified: new Date
+        emailVerified: new Date,
+        role: null
      }
     ]
     return await prisma.user.createMany({
