@@ -1,9 +1,9 @@
 import type {Student, Group} from "@prisma/client"
 
-type StudentWidthGroup = Student & {group: Group}
+type StudentWidthGroup = Student & {group?: Group}
 
 
-export function StudentList({student}: {student: StudentWidthGroup[]}) {
+export function StudentsList({student}: {student: StudentWidthGroup[]}) {
     return <table>
         <thead>
             <tr>
